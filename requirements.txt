@@ -1,0 +1,3 @@
+pandas
+basketball_reference_web_scraper
+scikit-learn
