@@ -1,24 +1,38 @@
 import os
 import pandas as pd
+import pickle
+from playerobj import Player
 from basketball_reference_web_scraper import client
-from basketball_reference_web_scraper.data import OutputType
+from basketball_reference_web_scraper.data import OutputType, OutputWriteOption
 
 
 def update_player_database(season_end_year):
 
     #create a file name using season
     #os.remove("2024_2025_player_season_totals.csv")
+    season_start_year = season_end_year - 1
+    csv_file = f"./{season_start_year}_{season_end_year}_player_season_totals.csv"
+    database_file = f"{season_start_year}_{season_end_year}_player_database"
 
     client.players_season_totals(
-        season_end_year=2025, 
+        season_end_year=season_end_year,
         output_type=OutputType.CSV, 
-        output_file_path="./2024_2025_player_season_totals.csv"
+        output_file_path=csv_file
     )
 
-    #create player database with slug, Name - Team - Position
+    totals_df = pd.read_csv(csv_file)
 
-    #create the per game stats
-    #create_per_game_stats()
+    #create player database with slug, Name - Team - Position
+    player_list = []
+
+    for row in totals_df.itertuples():
+        player = Player(row.slug, row.name, row.team, row.positions)
+        player_list.append(player)
+    
+    # save database as a pickle file
+    with open(database_file, 'wb') as database:
+        pickle.dump(player_list, database)
+   
 
 
 
