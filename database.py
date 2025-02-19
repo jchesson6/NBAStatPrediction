@@ -12,7 +12,7 @@ def update_player_database(season_end_year):
     #os.remove("2024_2025_player_season_totals.csv")
     season_start_year = season_end_year - 1
     csv_file = f"./{season_start_year}_{season_end_year}_player_season_totals.csv"
-    database_file = f"{season_start_year}_{season_end_year}_player_database"
+    database_file = f"{season_start_year}_{season_end_year}_player_database.dat"
 
     client.players_season_totals(
         season_end_year=season_end_year,
