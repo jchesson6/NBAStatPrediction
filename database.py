@@ -23,34 +23,45 @@ def update_player_database(season_end_year):
     totals_df = pd.read_csv(csv_file)
 
     #create player database with slug, Name - Team - Position
+    # will need to handle duplicated players on basketball reference that have switched teams somehow
     player_list = []
 
     for row in totals_df.itertuples():
         player = Player(row.slug, row.name, row.team, row.positions)
         player_list.append(player)
+        # will probably implement pulling the box scores for each player and combining them into a single dataframe and csv
     
     # save database as a pickle file
     with open(database_file, 'wb') as database:
         pickle.dump(player_list, database)
+
+    return player_list
    
 
+def return_current_player_list(name):
+
+    return update_player_database(2025)
 
 
-def get_player_box_scores(player, season_end_year, filename):
+
+def get_player_box_scores(slug, season_end_year, filename, process=True):
 
     #create file name using player name and season if storing all csvs
 
     client.regular_season_player_box_scores(
-        player_identifier=player, 
+        player_identifier=slug, 
         season_end_year=season_end_year, 
         output_type=OutputType.CSV, 
         output_file_path=filename
     )
+    #this will probably move into the update database and be replaced with reading a large csv
 
     #create to date ppg, rpg, apg, etc stats
-    process_box_scores(filename)
+    if process:
+        process_box_scores(filename)
 
     #add to the overall csv containing all player box scores
+
 
 def process_box_scores(filename):
 
