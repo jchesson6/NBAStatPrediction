@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+import numpy as np
 import pickle
 import datetime
 from playerobj import Player
@@ -163,20 +164,37 @@ def normalize_and_split_box(player, season_end_year=None, target="points"):
            # 'attempted_field_goals', 'made_three_point_field_goals']]
 
     # customize data based on desired output
-    if target == "total_rebounds":
-        y = df['total_rebounds']
+    if target == "rebounds":
+        x = df[['seconds_played', 'minutes_played', 'offensive_rebounds', 'defensive_rebounds']]
+        y = df[['total_rebounds']]
     elif target == "assists":
-        y = df['assists']
-    else:
-        df = df[['seconds_played', 'minutes_played','made_field_goals', 'attempted_field_goals', 'made_three_point_field_goals', 
-                'attempted_three_point_field_goals', 'made_free_throws', 'attempted_free_throws', 'ppg_td', 'points_scored']]
-        
-        x = df.drop(columns=['points_scored'])
-        x_labels = x.columns.to_list()
+        y = df[['assists']]
+    elif target == "points":
+        x = df[['seconds_played', 'minutes_played','made_field_goals', 'attempted_field_goals', 'made_three_point_field_goals', 
+                'attempted_three_point_field_goals', 'made_free_throws', 'attempted_free_throws', 'ppg_td']]
         y = df[['points_scored']]
-        y_labels = y.columns.to_list()
+    else:
+        return #for options not currently implemented
+        
 
-        x_t = scaler.fit_transform(x,y)
-        y_t = scaler.fit_transform(y)
+    x_labels = x.columns.to_list()
+    y_labels = y.columns.to_list()
+    x_t = scaler.fit_transform(x,y)
+    y_t = scaler.fit_transform(y)
 
     return x_t, y_t, x_labels, y_labels
+
+
+def generate_windowed_sequence_data(x_orig, y_orig, window_size):
+
+    x_seq = []
+    y_seq = []
+
+    for i in range(len(x_orig)-window_size):
+        x = x_orig[i:(i+window_size)]
+        y = y_orig[i+1:i+window_size+1]
+        x_seq.append(x)
+        y_seq.append(y)
+
+    return np.array(x_seq), np.array(y_seq)
+
