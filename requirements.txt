@@ -1,8 +1,11 @@
+#data packages
 pandas
 numpy
 basketball_reference_web_scraper
 scikit-learn
 InquirerPy
+
+#pytorch packages
 --index-url https://download.pytorch.org/whl/cu124
 torch 
 torchvision 

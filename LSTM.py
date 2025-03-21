@@ -15,9 +15,9 @@ class LSTM_RNN(nn.Module):
     def forward(self, x, h0=None, c0=None):
 
         if h0 is None or c0 is None:
-            h0 = torch.zeros(self.num_layers, x.size(0), self.hidden_features).to(x.device)
-            c0 = torch.zeros(self.num_layers, x.size(0), self.hidden_features).to(x.device)
+            h0 = torch.zeros(self.num_layers, x.size(1), self.hidden_features).to(x.device)
+            c0 = torch.zeros(self.num_layers, x.size(1), self.hidden_features).to(x.device)
 
         out, (hn, cn) = self.lstm(x, (h0, c0))
-        out = self.fc_output_layer(out[:, -1, :])  # Selecting the last output
+        out = self.fc_output_layer(out)  # Selecting the last output
         return out, hn, cn
