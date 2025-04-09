@@ -9,7 +9,7 @@ class LSTM_RNN(nn.Module):
         self.hidden_features = hidden_features
         self.num_layers = num_layers
         self.num_outputs = num_outputs
-        self.lstm = nn.LSTM(num_inputs, hidden_features, num_layers) #lstm model
+        self.lstm = nn.LSTM(input_size=num_inputs, hidden_size=hidden_features, num_layers=num_layers) #lstm model
         self.fc_output_layer = nn.Linear(hidden_features, num_outputs) #convert predictions to outputs
         
     def forward(self, x, h0=None, c0=None):
