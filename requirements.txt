@@ -1,9 +1,10 @@
-#data packages
+#project packages
 pandas
 numpy
 basketball_reference_web_scraper
 scikit-learn
 InquirerPy
+matplotlib
 
 #pytorch packages
 --index-url https://download.pytorch.org/whl/cu124

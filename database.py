@@ -294,18 +294,18 @@ def process_box(scalerx, scalery, playerscaler, outscaler, csvfile=None, season_
 
     elif target == "rebounds":
 
-        feature_columns = ['seconds_played', 'minutes_played','offensive_rebounds', 'defensive_rebounds', 'total_rebounds', 'rpg_td']
+        feature_columns = ['seconds_played', 'minutes_played','offensive_rebounds', 'defensive_rebounds', 'total_rebounds', 'rpg_td', 'rpg_l5g']
 
     elif target == "assists":
 
-        feature_columns = ['seconds_played', 'minutes_played','assists', 'apg_td']
+        feature_columns = ['seconds_played', 'minutes_played','assists', 'apg_td', 'apg_l5g']
 
     elif target == "fantasy points":
 
         feature_columns = ['seconds_played', 'minutes_played','made_field_goals', 'attempted_field_goals', 'made_three_point_field_goals', 
                 'attempted_three_point_field_goals', 'made_free_throws', 'attempted_free_throws', 'points_scored', 'offensive_rebounds', 
                 'defensive_rebounds', 'assists', 'total_rebounds', 'steals', 'blocks', 'turnovers', 'ppg_td', 'rpg_td', 'apg_td', 'spg_td', 
-                'bpg_td', 'tpg_td', 'fppg_td']
+                'bpg_td', 'tpg_td', 'fppg_td', 'ppg_l5g', 'rpg_l5g', 'apg_l5g', 'spg_l5g', 'bpg_l5g', 'tpg_l5g', 'fppg_l5g']
 
     else:
         return #for options not currently implemented
@@ -365,23 +365,26 @@ def process_box(scalerx, scalery, playerscaler, outscaler, csvfile=None, season_
     player_in_s = playerscaler.fit_transform(player_in)
     outscaler.fit(player_out)
 
+    scalerx.fit(df[feature_columns])
+    scalery.fit(df[target_string].to_frame(name=target_feat))
+
     for win in x_train:
-        xtrain_s.append(scalerx.fit_transform(win))
+        xtrain_s.append(scalerx.transform(win))
 
     for win in x_val:
-        xval_s.append(scalerx.fit_transform(win))
+        xval_s.append(scalerx.transform(win))
 
     for win in x_test:
-        xtest_s.append(scalerx.fit_transform(win))
+        xtest_s.append(scalerx.transform(win))
 
     for win in y_train:
-        ytrain_s.append(scalery.fit_transform(win))
+        ytrain_s.append(scalery.transform(win))
 
     for win in y_val:
-        yval_s.append(scalery.fit_transform(win))
+        yval_s.append(scalery.transform(win))
 
     for win in y_test:
-        ytest_s.append(scalery.fit_transform(win))
+        ytest_s.append(scalery.transform(win))
 
 
     """ ytrain_s = scalery.fit_transform(y_train)
